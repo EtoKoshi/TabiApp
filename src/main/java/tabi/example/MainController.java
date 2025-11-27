@@ -4,18 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
-//import javafx.scene.web.WebView;
+import javafx.scene.web.WebView;
 
 public class MainController {
 
-    /*@FXML
-    private WebView GoogleMap;*/
+    @FXML
+    private WebView GoogleMap;
 
     @FXML
     private Label kigou;
 
     @FXML
-    private TextField thkw;  
+    private TextField thkw;
 
     @FXML
     private TextField TextFieldA;
@@ -36,7 +36,8 @@ public class MainController {
         TextFieldA.textProperty().addListener((obs, oldV, newV) -> calc());
         TextFieldB.textProperty().addListener((obs, oldV, newV) -> calc());
         thkw.textProperty().addListener((obs, oldV, newV) -> calc());
-        // -----------------------------------------
+        String url = getClass().getResource("/tabi/example/index.html").toExternalForm();
+        GoogleMap.getEngine().load(url);
     }
 
     // ---- 追加：自動計算メソッド ----
@@ -44,7 +45,7 @@ public class MainController {
         try {
             int numA = Integer.parseInt(TextFieldA.getText());
             int numB = Integer.parseInt(TextFieldB.getText());
-            String op = thkw.getText();  // ← 演算子取得
+            String op = thkw.getText(); // ← 演算子取得
 
             int result;
 
@@ -74,5 +75,4 @@ public class MainController {
             Answer.setText("");
         }
     }
-    // ----------------------------------
 }
