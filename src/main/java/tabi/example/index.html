@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Google Map</title>
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        function initMap() {
+            const tokyo = { lat: 35.681236, lng: 139.767125 }; // 東京駅
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: tokyo,
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" defer></script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

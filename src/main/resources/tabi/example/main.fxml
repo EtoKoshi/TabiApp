@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabi.example.MainController">
    <children>
       <TextArea fx:id="memo" layoutX="307.0" layoutY="82.0" prefHeight="389.0" prefWidth="319.0" />
-      <TextField fx:id="TextFieldA" layoutX="382.0" layoutY="47.0" prefHeight="25.0" prefWidth="68.0" />
-      <TextField fx:id="TextFieldB" layoutX="493.0" layoutY="47.0" prefHeight="25.0" prefWidth="68.0" />
-      <Label fx:id="kigou" layoutX="561.0" layoutY="51.0" text="=" />
-      <Label fx:id="Answer" layoutX="570.0" layoutY="51.0" text="結果" />
-      <Button fx:id="keisanButoon" layoutX="320.0" layoutY="47.0" mnemonicParsing="false" text="計算" />
-      <TextField fx:id="thkw" layoutX="451.0" layoutY="47.0" prefHeight="25.0" prefWidth="40.0" />
+      <TextField fx:id="TextFieldA" layoutX="307.0" layoutY="47.0" prefHeight="25.0" prefWidth="96.0" />
+      <TextField fx:id="TextFieldB" layoutX="442.0" layoutY="47.0" prefHeight="25.0" prefWidth="96.0" />
+      <Label fx:id="kigou" layoutX="539.0" layoutY="51.0" prefHeight="17.0" prefWidth="9.0" text="=" />
+      <Label fx:id="Answer" layoutX="548.0" layoutY="51.0" prefHeight="17.0" prefWidth="27.0" text="結果" />
+      <TextField fx:id="thkw" layoutX="402.0" layoutY="47.0" prefHeight="25.0" prefWidth="40.0" />
+      <WebView fx:id="GoogleMap" layoutX="7.0" layoutY="14.0" prefHeight="457.0" prefWidth="287.0" />
    </children>
 </AnchorPane>
