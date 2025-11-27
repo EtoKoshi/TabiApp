@@ -4,18 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
-import javafx.scene.control.Button;
+//import javafx.scene.web.WebView;
 
 public class MainController {
+
+    /*@FXML
+    private WebView GoogleMap;*/
+
     @FXML
     private Label kigou;
 
-
     @FXML
-    private TextField thkw;  // ← ここに演算子を入れる
-
-    @FXML
-    private Button keisanButoon;
+    private TextField thkw;  
 
     @FXML
     private TextField TextFieldA;
@@ -32,10 +32,19 @@ public class MainController {
     @FXML
     private void initialize() {
 
-        keisanButoon.setOnAction((e) -> {
+        // ---- 追加部分：入力するたびに自動計算 ----
+        TextFieldA.textProperty().addListener((obs, oldV, newV) -> calc());
+        TextFieldB.textProperty().addListener((obs, oldV, newV) -> calc());
+        thkw.textProperty().addListener((obs, oldV, newV) -> calc());
+        // -----------------------------------------
+    }
+
+    // ---- 追加：自動計算メソッド ----
+    private void calc() {
+        try {
             int numA = Integer.parseInt(TextFieldA.getText());
             int numB = Integer.parseInt(TextFieldB.getText());
-            String op = thkw.getText();   // ← 演算子取得
+            String op = thkw.getText();  // ← 演算子取得
 
             int result;
 
@@ -60,6 +69,10 @@ public class MainController {
             }
 
             Answer.setText(String.valueOf(result));
-        });
+        } catch (Exception e) {
+            // 数字未入力・不正入力のときは結果を消す
+            Answer.setText("");
+        }
     }
+    // ----------------------------------
 }
