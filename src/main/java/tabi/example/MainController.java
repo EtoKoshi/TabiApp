@@ -9,7 +9,7 @@ import javafx.scene.web.WebView;
 public class MainController {
 
     @FXML
-    private WebView GoogleMap;
+    private WebView Map;
 
     @FXML
     private Label kigou;
@@ -37,7 +37,7 @@ public class MainController {
         TextFieldB.textProperty().addListener((obs, oldV, newV) -> calc());
         thkw.textProperty().addListener((obs, oldV, newV) -> calc());
         String url = getClass().getResource("/tabi/example/index.html").toExternalForm();
-        GoogleMap.getEngine().load(url);
+        Map.getEngine().load(url);
     }
 
     // ---- 追加：自動計算メソッド ----

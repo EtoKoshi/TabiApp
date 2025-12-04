@@ -1,28 +1,89 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <title>Google Map</title>
-    <style>
-        html, body, #map {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-    <script>
-        function initMap() {
-            const tokyo = { lat: 35.681236, lng: 139.767125 }; // 東京駅
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 14,
-                center: tokyo,
-            });
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map in WebView (Leaflet)</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+e2k8q1t0zS4nqf0s1yQfQHqjvT5kzjHc6GkXv+gI="
+    crossorigin=""
+  />
+
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #map { min-height: 300px; } /* 必要に応じ調整 */
+    .leaflet-popup-content-wrapper { font-size: 14px; }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-QV+6Gd7mZqB6c1u0Yb0t0b0rY9Q3qgkKf3eVb0nYs2g="
+    crossorigin=""
+  ></script>
+
+  <script>
+    // 初期表示座標（東京）とズーム
+    const initialLat = 35.6895;
+    const initialLng = 139.6917;
+    const initialZoom = 12;
+
+    // マップ生成
+    const map = L.map('map').setView([initialLat, initialLng], initialZoom);
+
+    // OpenStreetMap のタイルを利用
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // サンプルマーカー（吹き出し付き）
+    const marker = L.marker([initialLat, initialLng]).addTo(map);
+    marker.bindPopup('<b>ここは東京！</b><br>サンプルマーカーです。').openPopup();
+
+    // マーカー追加関数（Java から呼べるようにグローバルに公開しておく）
+    function addMarker(lat, lng, label) {
+      const m = L.marker([lat, lng]).addTo(map);
+      if (label) m.bindPopup(label);
+      return m;
+    }
+
+    // 地図を指定座標にセンターする関数
+    function setCenter(lat, lng, zoom) {
+      if (zoom !== undefined) map.setView([lat, lng], zoom);
+      else map.panTo([lat, lng]);
+    }
+
+    // WebView 内で Java から呼ばれる可能性を考慮してグローバルに露出
+    window.mapAPI = {
+      addMarker: addMarker,
+      setCenter: setCenter
+    };
+
+    // （オプション）URL クエリから座標を受け取って初期マーカーを置く例
+    // 例: index.html?lat=35.68&lng=139.76
+    (function applyQuery() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const lat = parseFloat(params.get('lat'));
+        const lng = parseFloat(params.get('lng'));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          setCenter(lat, lng, params.get('zoom') ? parseInt(params.get('zoom')) : undefined);
+          addMarker(lat, lng, "URLで指定された地点");
+        }
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
 </body>
 </html>
