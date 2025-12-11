@@ -11,8 +11,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        var loader = new FXMLLoader(getClass().getResource("main.fxml"));
-        var scene = new Scene(loader.load());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
+        Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         stage.setScene(scene);

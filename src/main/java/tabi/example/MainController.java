@@ -4,12 +4,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
-import javafx.scene.web.WebView;
 
+import com.gluonhq.maps.MapView;
+import com.gluonhq.maps.MapPoint;
+import com.gluonhq.maps.MapLayer;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Circle;
+
+/**
+ * MainController — MapView を使うバージョン
+ */
 public class MainController {
 
     @FXML
-    private WebView Map;
+    private MapView mapView;
 
     @FXML
     private Label kigou;
@@ -32,20 +40,25 @@ public class MainController {
     @FXML
     private void initialize() {
 
-        // ---- 追加部分：入力するたびに自動計算 ----
+        // ---- 自動計算リスナ ----
         TextFieldA.textProperty().addListener((obs, oldV, newV) -> calc());
         TextFieldB.textProperty().addListener((obs, oldV, newV) -> calc());
         thkw.textProperty().addListener((obs, oldV, newV) -> calc());
-        String url = getClass().getResource("/tabi/example/index.html").toExternalForm();
-        Map.getEngine().load(url);
+
+        // ---- MapView の初期化（例：京都駅を中心に） ----
+         MapPoint kyoto = new MapPoint(34.985849, 135.758766);
+        mapView.setCenter(kyoto);
+        mapView.setZoom(12); 
+
+        // 簡単なマーカーレイヤーを追加
+        mapView.addLayer(new MarkerLayer(kyoto));
     }
 
-    // ---- 追加：自動計算メソッド ----
     private void calc() {
         try {
             int numA = Integer.parseInt(TextFieldA.getText());
             int numB = Integer.parseInt(TextFieldB.getText());
-            String op = thkw.getText(); // ← 演算子取得
+            String op = thkw.getText();
 
             int result;
 
@@ -71,8 +84,28 @@ public class MainController {
 
             Answer.setText(String.valueOf(result));
         } catch (Exception e) {
-            // 数字未入力・不正入力のときは結果を消す
             Answer.setText("");
+        }
+    }
+
+    // 簡易マーカーレイヤー（MapLayer を継承）
+    private static class MarkerLayer extends MapLayer {
+        private final MapPoint point;
+        private final Circle circle;
+
+        public MarkerLayer(MapPoint point) {
+            this.point = point;
+            this.circle = new Circle(6); // サイズだけ指定（色は CSS でも可）
+            // 任意で色を指定したければ circle.setFill(Color.RED);
+            getChildren().add(circle);
+        }
+
+        @Override
+        protected void layoutLayer() {
+            // <-- 修正済み: MapPoint を直接渡すのではなく緯度・経度を渡す
+            Point2D p = getMapPoint(point.getLatitude(), point.getLongitude());
+            circle.setTranslateX(p.getX());
+            circle.setTranslateY(p.getY());
         }
     }
 }
