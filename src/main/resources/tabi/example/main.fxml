@@ -14,6 +14,6 @@
       <Label fx:id="kigou" layoutX="539.0" layoutY="51.0" prefHeight="17.0" prefWidth="9.0" text="=" />
       <Label fx:id="Answer" layoutX="548.0" layoutY="51.0" prefHeight="17.0" prefWidth="27.0" text="結果" />
       <TextField fx:id="thkw" layoutX="402.0" layoutY="47.0" prefHeight="25.0" prefWidth="40.0" />
-      <MapView fx:id="mapView" layoutX="82.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" />
+      <MapView fx:id="mapView" layoutX="1.0" layoutY="1.0" prefHeight="500.0" prefWidth="300.0" />
    </children>
 </AnchorPane>
