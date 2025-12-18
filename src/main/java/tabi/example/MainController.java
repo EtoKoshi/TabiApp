@@ -4,17 +4,29 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 
 import com.gluonhq.maps.MapView;
 import com.gluonhq.maps.MapPoint;
 import com.gluonhq.maps.MapLayer;
-import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javafx.stage.FileChooser;
 
 /**
  * MainController — MapView を使うバージョン
  */
 public class MainController {
+
+    @FXML
+    private Button hozon;
+
+    @FXML
+    private Button risetto;
 
     @FXML
     private MapView mapView;
@@ -40,18 +52,41 @@ public class MainController {
     @FXML
     private void initialize() {
 
-        // ---- 自動計算リスナ ----
-        TextFieldA.textProperty().addListener((obs, oldV, newV) -> calc());
-        TextFieldB.textProperty().addListener((obs, oldV, newV) -> calc());
-        thkw.textProperty().addListener((obs, oldV, newV) -> calc());
+        // ---- 自動計算 ----
+        TextFieldA.textProperty().addListener((obs, o, n) -> calc());
+        TextFieldB.textProperty().addListener((obs, o, n) -> calc());
+        thkw.textProperty().addListener((obs, o, n) -> calc());
 
-        // ---- MapView の初期化（例：京都駅を中心に） ----
-         MapPoint kyoto = new MapPoint(34.985849, 135.758766);
+        // ---- MapView 初期化（京都駅） ----
+        MapPoint kyoto = new MapPoint(34.985849, 135.758766);
         mapView.setCenter(kyoto);
-        mapView.setZoom(12); 
-
-        // 簡単なマーカーレイヤーを追加
+        mapView.setZoom(12);
         mapView.addLayer(new MarkerLayer(kyoto));
+
+        // ---- 保存（ファイル保存）----
+        hozon.setOnAction(e -> saveMemoToFile());
+
+        // ---- リセット ----
+        risetto.setOnAction(e -> memo.clear());
+    }
+
+    // memo をファイルに保存
+    private void saveMemoToFile() {
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("メモを保存");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("テキストファイル", "*.txt")
+        );
+
+        File file = chooser.showSaveDialog(memo.getScene().getWindow());
+        if (file == null) return;
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(memo.getText());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void calc() {
@@ -88,24 +123,19 @@ public class MainController {
         }
     }
 
-    // 簡易マーカーレイヤー（MapLayer を継承）
+    // 簡易マーカーレイヤー
     private static class MarkerLayer extends MapLayer {
-        private final MapPoint point;
+
         private final Circle circle;
 
         public MarkerLayer(MapPoint point) {
-            this.point = point;
-            this.circle = new Circle(6); // サイズだけ指定（色は CSS でも可）
-            // 任意で色を指定したければ circle.setFill(Color.RED);
+            this.circle = new Circle(6);
             getChildren().add(circle);
         }
 
         @Override
         protected void layoutLayer() {
-            // <-- 修正済み: MapPoint を直接渡すのではなく緯度・経度を渡す
-            Point2D p = getMapPoint(point.getLatitude(), point.getLongitude());
-            circle.setTranslateX(p.getX());
-            circle.setTranslateY(p.getY());
+            // 今回は未使用
         }
     }
 }
