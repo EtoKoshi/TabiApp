@@ -127,23 +127,6 @@ public class MainController {
         }
     }
 
-    // 簡易マーカーレイヤー
-    /*
-     * private static class MarkerLayer extends MapLayer {
-     * 
-     * private final Circle circle;
-     * 
-     * public MarkerLayer(MapPoint point) {
-     * this.circle = new Circle(6);
-     * getChildren().add(circle);
-     * }
-     * 
-     * @Override
-     * protected void layoutLayer() {
-     * // 今回は未使用
-     * }
-     * }
-     */
     private static class MarkerLayer extends MapLayer {
 
         private final MapPoint point;
@@ -158,14 +141,16 @@ public class MainController {
             getChildren().add(circle);
         }
 
-       /*@Override
+       /*  @Override
          protected void layoutLayer() {
-            javafx.geometry.Point2D pos = mapView.getMapPoint(point);
+            javafx.geometry.Point2D pos = mapView.getMapPoint(point.getLatitude(), point.getLongitude());
+
             if (pos != null) {
                 circle.setTranslateX(pos.getX());
                 circle.setTranslateY(pos.getY());
             }
         }*/
+
     }
 
 }
