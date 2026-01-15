@@ -17,9 +17,6 @@ import java.io.IOException;
 
 import javafx.stage.FileChooser;
 
-/**
- * MainController — MapView を使うバージョン
- */
 public class MainController {
 
     @FXML
@@ -61,13 +58,20 @@ public class MainController {
         MapPoint kyoto = new MapPoint(34.985849, 135.758766);
         mapView.setCenter(kyoto);
         mapView.setZoom(12);
-        mapView.addLayer(new MarkerLayer(kyoto));
+        mapView.addLayer(new MarkerLayer(mapView, kyoto));
 
         // ---- 保存（ファイル保存）----
         hozon.setOnAction(e -> saveMemoToFile());
 
         // ---- リセット ----
         risetto.setOnAction(e -> memo.clear());
+        // ---- 地図クリックでピンを追加 ----
+        mapView.setOnMouseClicked(e -> {
+            MapPoint point = mapView.getMapPosition(e.getX(), e.getY());
+            if (point != null) {
+                mapView.addLayer(new MarkerLayer(mapView, point));
+            }
+        });
     }
 
     // memo をファイルに保存
@@ -76,11 +80,11 @@ public class MainController {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("メモを保存");
         chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("テキストファイル", "*.txt")
-        );
+                new FileChooser.ExtensionFilter("テキストファイル", "*.txt"));
 
         File file = chooser.showSaveDialog(memo.getScene().getWindow());
-        if (file == null) return;
+        if (file == null)
+            return;
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(memo.getText());
@@ -124,18 +128,44 @@ public class MainController {
     }
 
     // 簡易マーカーレイヤー
+    /*
+     * private static class MarkerLayer extends MapLayer {
+     * 
+     * private final Circle circle;
+     * 
+     * public MarkerLayer(MapPoint point) {
+     * this.circle = new Circle(6);
+     * getChildren().add(circle);
+     * }
+     * 
+     * @Override
+     * protected void layoutLayer() {
+     * // 今回は未使用
+     * }
+     * }
+     */
     private static class MarkerLayer extends MapLayer {
 
+        private final MapPoint point;
         private final Circle circle;
+        private final MapView mapView;
 
-        public MarkerLayer(MapPoint point) {
+        public MarkerLayer(MapView mapView, MapPoint point) {
+            this.mapView = mapView;
+            this.point = point;
             this.circle = new Circle(6);
+            circle.setStyle("-fx-fill: red;");
             getChildren().add(circle);
         }
 
-        @Override
-        protected void layoutLayer() {
-            // 今回は未使用
-        }
+       /*@Override
+         protected void layoutLayer() {
+            javafx.geometry.Point2D pos = mapView.getMapPoint(point);
+            if (pos != null) {
+                circle.setTranslateX(pos.getX());
+                circle.setTranslateY(pos.getY());
+            }
+        }*/
     }
+
 }
